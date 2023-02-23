@@ -1,16 +1,15 @@
 import express from 'express'
+import cartsRouter from './routes/carts.router.js'
+import productRouter from './routes/products.router.js'
 
 const app = express()
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
+app.use('/api/carts',cartsRouter)
+app.use('/api/products',productRouter)
 
-import productosRouter from '../routes/products.router.js'
-import cartRouter from '../routes/cart.router.js'
-
-app.use('/api/productos',productosRouter)
-app.use('/api/cart',cartRouter)
-
-app.listen(8080,()=>{
-    console.log('escuchando puerto 8080')
+app.listen(8080,(req,res)=>{
+    console.log('Escuchando al puerto 8080')
 })
+

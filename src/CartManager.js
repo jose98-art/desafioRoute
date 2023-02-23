@@ -1,8 +1,0 @@
-class CartManager{
-    constructor(){
-
-    }
-    addCart(){
-        
-    }
-}

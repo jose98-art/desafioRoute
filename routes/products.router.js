@@ -1,43 +1,39 @@
 import { Router } from "express";
-const router = Router();
-import productManager from '../src/ProductManager.js'
+import Productos from '../productManager.js';
 
-const prodmanager = new productManager('../files/productos.json')
+const router = Router()
+const manager = new Productos()
 
-router.get('/',(req,res)=>{
-    const file = prodmanager.getProducts()
-    res.json(file)
+router.get('/',async(req,res)=>{
+    const {limit} = req.query
+    let prod = await manager.getProducts()
+    const prodLitmit = prod.slice(0,limit)
+    return res.json({Productos:prodLitmit})
 })
-router.get('/:idProd',(req,res)=>{
-    const {idProd} = req.params
-    const product = prodmanager.getProductById(parseInt(idProd))
-    res.json({message: "producto encontrado", product})
+
+router.get('/:idProduct',async(req,res)=>{
+    const {idProduct} = req.params
+    let prod = await manager.getProductById(Number(idProduct))
+    res.json({message:'tu productos es ',prod})
 })
-router.post('/',(req,res)=>{
+
+router.post('/',async(req,res)=>{
     const prod = req.body
-    prodmanager.addProduct(prod)
-    res.json({
-        message:"se ha generado tu producto con exito", prod
-    })
+    const prodCreate = await manager.addProduct(prod)
+    res.json(prodCreate)
 })
-router.put('/:idProd',(req,res)=>{
-    const {idProd} = req.params
-    const newValue = req.body
-    const date = Object.keys(newValue).toString()
-    const value =Object.values(newValue).toString()
 
-    const editProduct = prodmanager.updateProduct(parseInt(idProd), date, value)
-
-    res.json({
-        message: ' se ha editado tu producto', editProduct
-    })
+router.put('/:idProduct',async(req,res)=>{
+    const {idProduct} = req.params
+    const prodNew = req.body
+    const prodUpdate = await manager.updateProduct(Number(idProduct), prodNew)
+    res.json(prodUpdate)
 })
-router.delete('/:idProd',(req,res)=>{
-    const {idProd} = req.params
-    const eliminar = prodmanager.deleteProductBy(parseInt(idProd))
-    res.json({
-        message:'se ha eliminado el producto', eliminar
-    })
+
+router.delete('/:idProduct',async(req,res)=>{
+    const {idProduct} = req.params
+    const prodDelete = await manager.deleteProductById(Number(idProduct))
+    res.json(prodDelete)
 })
 
 export default router
